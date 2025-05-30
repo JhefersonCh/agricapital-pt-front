@@ -55,8 +55,6 @@ export class RoleService {
         ) || [],
     };
 
-    console.log(role);
-
     return role;
   }
 }

@@ -1,4 +1,8 @@
+import { Notifications } from '@/shared/components/Notifications';
 import { useAuth } from '@/shared/contexts/AuthContext';
+import { useRole } from '@/shared/contexts/RoleContext';
+import type { NotificationsUser } from '@/shared/interfaces/notification.interface';
+import { NotificationsService } from '@/shared/services/notificationsService';
 import {
   Disclosure,
   DisclosureButton,
@@ -8,7 +12,7 @@ import {
   MenuItem,
   MenuItems,
 } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -16,6 +20,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const navigation = [
   { name: 'Inicio', href: '/', current: true },
   { name: 'Nosotros', href: '/about', current: false },
+  { name: 'Clientes', href: '/credit/clients', current: false },
+  { name: 'Solicitudes', href: '/credit/requests', current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -27,15 +33,25 @@ export default function NavBar() {
   const navigate = useNavigate();
   const { session, loading, signOut } = useAuth();
   const [currentPath, setCurrentPath] = useState(location.pathname);
+  const { role, setRole } = useRole();
+  const [notifications, setNotifications] = useState<NotificationsUser[]>([]);
+  const service = new NotificationsService();
 
   useEffect(() => {
     setCurrentPath(location.pathname);
   }, [location]);
 
+  useEffect(() => {
+    service.getNotifications().then((data) => {
+      setNotifications(data.data);
+    });
+  }, []);
+
   const handleSignOut = async () => {
     try {
       await signOut();
       navigate('/');
+      setRole(null);
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -53,14 +69,10 @@ export default function NavBar() {
     if (session) {
       return (
         <>
-          <button
-            type="button"
-            className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
-          >
-            <span className="absolute -inset-1.5" />
-            <span className="sr-only">View notifications</span>
-            <BellIcon aria-hidden="true" className="size-6" />
-          </button>
+          <Notifications
+            count={notifications.length}
+            notifications={notifications}
+          />
           <Menu as="div" className="relative ml-3">
             <div>
               <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
@@ -145,23 +157,30 @@ export default function NavBar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    onClick={() => navigate(item.href)}
-                    aria-current={
-                      currentPath === item.href ? 'page' : undefined
-                    }
-                    className={classNames(
-                      currentPath === item.href
-                        ? 'bg-gray-600 text-[#8bd149]'
-                        : 'text-[#499403] hover:bg-gray-700 hover:text-[#8bd149]',
-                      'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
-                    )}
-                  >
-                    {item.name}
-                  </a>
-                ))}
+                {navigation.map((item) => {
+                  const hasPermission =
+                    role?.permissions.some((p) => item.href.includes(p)) ||
+                    ['/', '/auth/login', '/about'].includes(item.href);
+                  return (
+                    hasPermission && (
+                      <a
+                        key={item.name}
+                        onClick={() => navigate(item.href)}
+                        aria-current={
+                          currentPath === item.href ? 'page' : undefined
+                        }
+                        className={classNames(
+                          currentPath === item.href
+                            ? 'bg-gray-600 text-[#8bd149]'
+                            : 'text-[#499403] hover:bg-gray-700 hover:text-[#8bd149]',
+                          'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
+                        )}
+                      >
+                        {item.name}
+                      </a>
+                    )
+                  );
+                })}
               </div>
             </div>
           </div>

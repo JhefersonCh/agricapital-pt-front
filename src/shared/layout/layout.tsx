@@ -9,6 +9,7 @@ import { RoleProvider } from '../contexts/RoleContext';
 import { RoleGuard } from '../guards/RoleGuard';
 import { UserRoutes } from '@/user/UserRoutes';
 import Unauthorized from '../pages/unauthorized/Unauthorized';
+import { CreditRoutes } from '@/credit/CreditRoutes';
 
 export const Layout = () => {
   return (
@@ -26,6 +27,10 @@ export const Layout = () => {
                 <Route
                   path="/user/*"
                   element={<RoleGuard children={<UserRoutes />} />}
+                />
+                <Route
+                  path="/credit/*"
+                  element={<RoleGuard children={<CreditRoutes />} />}
                 />
                 <Route
                   path="/unauthorized"

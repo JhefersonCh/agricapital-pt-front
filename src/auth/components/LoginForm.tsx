@@ -93,16 +93,51 @@ export const LoginForm = () => {
       setIsSubmitting(false);
     }
   };
-
-  const handleGoogleLogin = async () => {
+  const handleGoogleLoginSimple = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          queryParams: {
+            prompt: 'select_account',
+          },
+          skipBrowserRedirect: true,
         },
       });
+
       if (error) throw error;
+
+      if (data?.url) {
+        const width = 500;
+        const height = 600;
+        const left = (window.innerWidth - width) / 2;
+        const top = (window.innerHeight - height) / 2;
+
+        const popup = window.open(
+          data.url,
+          'GoogleLogin',
+          `width=${width},height=${height},top=${top},left=${left},popup=yes`,
+        );
+
+        // Escuchar cambios en el estado de autenticación
+        const { data: authListener } = supabase.auth.onAuthStateChange(
+          (event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+              popup?.close();
+              authListener?.subscription?.unsubscribe();
+              console.log('Login exitoso, popup cerrado');
+            }
+          },
+        );
+
+        // Timeout de seguridad
+        setTimeout(() => {
+          if (popup && !popup.closed) {
+            popup.close();
+            authListener?.subscription?.unsubscribe();
+          }
+        }, 5 * 60 * 1000);
+      }
     } catch (error) {
       setLoginError('Error al iniciar sesión con Google');
       console.error('Error Google login:', error);
@@ -114,7 +149,7 @@ export const LoginForm = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/`,
         },
       });
       if (error) throw error;
@@ -243,7 +278,7 @@ export const LoginForm = () => {
               variant="outline"
               type="button"
               className="w-full"
-              onClick={handleGoogleLogin}
+              onClick={handleGoogleLoginSimple}
               disabled={isSubmitting}
             >
               <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">

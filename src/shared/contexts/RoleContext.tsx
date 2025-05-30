@@ -15,6 +15,7 @@ interface Role {
 
 interface RoleContextType {
   role: Role | null;
+  setRole: (role: Role | null) => void;
   loadingRole: boolean;
 }
 
@@ -40,7 +41,7 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user?.id, loading]);
 
   return (
-    <RoleContext.Provider value={{ role, loadingRole }}>
+    <RoleContext.Provider value={{ role, setRole, loadingRole }}>
       {children}
     </RoleContext.Provider>
   );

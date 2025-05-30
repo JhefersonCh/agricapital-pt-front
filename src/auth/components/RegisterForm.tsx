@@ -4,7 +4,7 @@ import { CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/supabaseClient';
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Phone, User } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ export const RegisterForm = ({
     email: '',
     password: '',
     confirmPassword: '',
+    phone: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -90,15 +91,24 @@ export const RegisterForm = ({
         email: '',
         password: '',
         confirmPassword: '',
+        phone: '',
       });
-      await supabase.auth.signUp({
+      const { data: user } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
           data: {
             name: formData.name,
+            phone: formData.phone,
           },
         },
+      });
+
+      await supabase.from('users').insert({
+        id: user?.user?.id,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
       });
     } catch (error) {
       console.error('Error al registrar:', error);
@@ -142,6 +152,25 @@ export const RegisterForm = ({
           </div>
           {errors.email && (
             <p className="text-sm text-red-500">{errors.email}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="phone">Telefono</Label>
+          <div className="relative">
+            <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              id="phone"
+              name="phone"
+              type="phone"
+              placeholder="Ingresa tu telefono"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className={`pl-10 ${errors.phone ? 'border-red-500' : ''}`}
+            />
+          </div>
+          {errors.phone && (
+            <p className="text-sm text-red-500">{errors.phone}</p>
           )}
         </div>
 

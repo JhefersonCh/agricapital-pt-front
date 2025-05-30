@@ -10,7 +10,7 @@ export const RoleGuard = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !loadingRole) {
       if (!user) {
         console.warn(
           'RoleGuard: Usuario no autenticado. Redirigiendo a login.',
@@ -30,7 +30,7 @@ export const RoleGuard = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      if (!role.permissions.includes(location.pathname)) {
+      if (!role.permissions.some((p) => location.pathname.includes(p))) {
         console.warn(
           `RoleGuard: El usuario con rol "${role.name}" no tiene permiso para acceder a "${location.pathname}". Redirigiendo a /unauthorized.`,
         );
@@ -57,7 +57,7 @@ export const RoleGuard = ({ children }: { children: React.ReactNode }) => {
     return;
   }
 
-  if (!role.permissions.includes(location.pathname)) {
+  if (!role.permissions.some((p) => location.pathname.includes(p))) {
     return <Navigate to="/unauthorized" replace />;
   }
 
