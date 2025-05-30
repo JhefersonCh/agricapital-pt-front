@@ -8,7 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": {
+      "src/**/*.{js,jsx,ts,tsx}": [
+        "eslint --fix",
+        "prettier --write"
+      ]
+    }
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
