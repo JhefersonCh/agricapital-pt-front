@@ -18,7 +18,7 @@ export const Paginator = ({
   setPage: (page: number) => void;
 }) => {
   const getPages = () => {
-    const pages = [];
+    const pages: number[] = [];
     const delta = 2;
 
     const start = Math.max(1, page - delta);
