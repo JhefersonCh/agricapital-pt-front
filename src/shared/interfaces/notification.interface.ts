@@ -5,6 +5,8 @@ export interface NotificationsUser {
   created_at: Date;
   updated_at: Date;
   read_at: null;
+  title?: string;
+  message?: string;
   notification: Notification;
 }
 

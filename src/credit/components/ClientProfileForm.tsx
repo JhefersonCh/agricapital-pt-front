@@ -102,7 +102,7 @@ export function ClientProfileForm({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" role="form">
           <div className="space-y-4">
             <h3 className="text-lg font-medium mb-6 mt-8">
               Información Personal
@@ -217,6 +217,7 @@ export function ClientProfileForm({
                   Ratio de Deuda a Ingreso
                 </Label>
                 <Slider
+                  title="Ratio de Deuda a Ingreso"
                   min={0}
                   max={1}
                   step={0.01}

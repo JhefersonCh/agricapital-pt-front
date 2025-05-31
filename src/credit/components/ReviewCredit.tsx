@@ -10,12 +10,12 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { DialogDescription } from '@radix-ui/react-dialog';
 import {
   CalendarDays,
   DollarSign,
@@ -602,7 +602,7 @@ export function ReviewCredit({
                   value={selectedStatus}
                   onValueChange={setSelectedStatus}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger title="Selecciona un estado">
                     <SelectValue placeholder="Selecciona un estado" />
                   </SelectTrigger>
                   <SelectContent>

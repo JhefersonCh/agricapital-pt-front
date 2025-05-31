@@ -25,7 +25,7 @@ export function RequestsList() {
 
   useEffect(() => {
     loadRequests();
-  }, [page]);
+  }, [page, sortOrder, orderBy]);
 
   async function loadRequests() {
     setLoading(true);
@@ -50,7 +50,6 @@ export function RequestsList() {
     setSortOrder(order);
     setOrderBy(field);
     setPage(1);
-    loadRequests();
   };
 
   const riks_score_to_text = (score: number) => {

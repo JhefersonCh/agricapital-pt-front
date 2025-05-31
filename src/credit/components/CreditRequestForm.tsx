@@ -136,7 +136,9 @@ export function CreditRequestForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Información del Crédito</CardTitle>
+        <CardTitle title="Información del Crédito">
+          Información del Crédito
+        </CardTitle>
         <CardDescription>
           Especifica los detalles de tu solicitud de crédito
         </CardDescription>
@@ -242,7 +244,10 @@ export function CreditRequestForm({
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona tipo de crédito" />
+                      <SelectValue
+                        placeholder="Selecciona tipo de crédito"
+                        title="Selecciona tipo de crédito"
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {relatedData?.credit_types?.map((type: any) => (
@@ -264,7 +269,10 @@ export function CreditRequestForm({
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona estado" />
+                        <SelectValue
+                          placeholder="Selecciona estado"
+                          title="Selecciona estado"
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {relatedData?.request_statuses?.map((status: any) => (

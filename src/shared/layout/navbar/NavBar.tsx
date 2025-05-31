@@ -14,9 +14,10 @@ import {
 } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+const WEBSOCKET_URL = import.meta.env.VITE_WS_URL;
 const navigation = [
   { name: 'Inicio', href: '/', current: true },
   { name: 'Nosotros', href: '/about', current: false },
@@ -36,16 +37,78 @@ export default function NavBar() {
   const { role, setRole } = useRole();
   const [notifications, setNotifications] = useState<NotificationsUser[]>([]);
   const service = new NotificationsService();
+  const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     setCurrentPath(location.pathname);
   }, [location]);
 
   useEffect(() => {
-    service.getNotifications().then((data) => {
-      setNotifications(data.data);
-    });
-  }, []);
+    const userId = session?.user?.id;
+
+    if (userId) {
+      service
+        .getNotifications()
+        .then((data) => {
+          setNotifications(data.data);
+        })
+        .catch((error) => {
+          console.error('Error al cargar notificaciones iniciales:', error);
+        });
+
+      if (!ws.current || ws.current.readyState === WebSocket.CLOSED) {
+        console.log('Intentando conectar WebSocket para el usuario:', userId);
+        ws.current = new WebSocket(`${WEBSOCKET_URL}/${userId}`);
+
+        ws.current.onopen = () => {
+          console.log('Conexión WebSocket establecida.');
+        };
+
+        ws.current.onmessage = (event) => {
+          try {
+            const newNotification: NotificationsUser = JSON.parse(event.data);
+            console.log('Notificación recibida por WS:', newNotification);
+            console.log('Notificaciones actuales:', notifications);
+            setNotifications((prevNotifications) => [
+              newNotification,
+              ...prevNotifications,
+            ]);
+            console.log('Notificaciones nuevas:', notifications);
+          } catch (error) {
+            console.error('Error al parsear mensaje de WebSocket:', error);
+          }
+        };
+
+        ws.current.onclose = (event) => {
+          console.log('Conexión WebSocket cerrada:', event);
+          if (session?.user?.id) {
+            setTimeout(() => {
+              console.log('Intentando reconectar WebSocket...');
+            }, 5000);
+          }
+        };
+
+        ws.current.onerror = (error) => {
+          console.error('Error en WebSocket:', error);
+          ws.current?.close();
+        };
+      }
+    } else {
+      if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+        ws.current.close();
+        ws.current = null;
+        setNotifications([]);
+      }
+    }
+
+    return () => {
+      if (ws.current) {
+        console.log('Cerrando conexión WebSocket en limpieza.');
+        ws.current.close();
+        ws.current = null;
+      }
+    };
+  }, [session?.user?.id]);
 
   const handleSignOut = async () => {
     try {
@@ -75,9 +138,16 @@ export default function NavBar() {
           />
           <Menu as="div" className="relative ml-3">
             <div>
-              <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+              <MenuButton
+                id="user-menu-button"
+                aria-label="Abrir menú"
+                title="Abrir menú"
+                className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+              >
                 <span className="absolute -inset-1.5" />
-                <span className="sr-only">Open user menu</span>
+                <span className="sr-only" aria-label="Open user menu">
+                  Open user menu
+                </span>
                 <img
                   alt=""
                   src={
@@ -93,23 +163,8 @@ export default function NavBar() {
               className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
             >
               <MenuItem>
-                <a
-                  onClick={() => navigate('/user/profile')}
-                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                >
-                  Tu Perfil
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a
-                  onClick={() => navigate('/user/settings')}
-                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                >
-                  Configuración
-                </a>
-              </MenuItem>
-              <MenuItem>
                 <button
+                  title="Cerrar sesión"
                   onClick={handleSignOut}
                   className="block w-full px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                 >

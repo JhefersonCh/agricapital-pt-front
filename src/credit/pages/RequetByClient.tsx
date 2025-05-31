@@ -57,7 +57,7 @@ interface AccountInfoData {
   previous_defaults: boolean;
 }
 
-export const RequetByClient = () => {
+export const RequestByClient = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(() => {
     const queryParams = new URLSearchParams(location.search);

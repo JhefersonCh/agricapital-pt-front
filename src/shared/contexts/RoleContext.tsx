@@ -3,8 +3,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from './AuthContext'; // asumiendo que ya tienes este
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from 'react';
+import { useAuth } from './AuthContext';
 import { RoleService } from '../services/RoleService';
 
 interface Role {
@@ -19,9 +25,11 @@ interface RoleContextType {
   loadingRole: boolean;
 }
 
-const RoleContext = createContext<RoleContextType | undefined>(undefined);
+export const RoleContext = createContext<RoleContextType | undefined>(
+  undefined,
+);
 
-export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
+export const RoleProvider = ({ children }: { children: ReactNode }) => {
   const { user, loading } = useAuth();
   const [role, setRole] = useState<Role | null>(null);
   const [loadingRole, setLoadingRole] = useState(true);

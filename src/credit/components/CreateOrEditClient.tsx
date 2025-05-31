@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from '@/components/ui/button';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import {
@@ -91,24 +92,49 @@ export function CreateClient({
 
     setIsSubmitting(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            name: formData.name,
-            phone: formData.phone,
+      const { data: signUpData, error: signUpError } =
+        await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              name: formData.name,
+              phone: formData.phone,
+            },
           },
-        },
-      });
-      if (error) throw error;
+        });
 
-      await supabase.from('users').insert({
-        id: data.user?.id,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-      });
+      if (signUpError) {
+        console.error('Error al crear usuario:', signUpError);
+        if (signUpError.message.includes('already exists')) {
+          setErrors((prev) => ({
+            ...prev,
+            email: 'El correo electrónico ya está registrado.',
+          }));
+        }
+        return;
+      }
+
+      if (!signUpData.user) {
+        console.error(
+          'Error al crear usuario: No se pudo obtener el usuario después del registro.',
+        );
+        return;
+      }
+
+      const { data: insertUserData, error: insertUserError } = await supabase
+        .from('users')
+        .insert({
+          id: signUpData.user.id,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        });
+
+      if (insertUserError) {
+        console.error('Error al crear usuario:', insertUserError);
+        return;
+      }
 
       setOpen(false);
       setFormData({ name: '', email: '', phone: '', password: '' });
@@ -156,7 +182,7 @@ export function CreateClient({
                 <Input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   placeholder="correo@ejemplo.com"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -204,6 +230,7 @@ export function CreateClient({
                 />
                 <button
                   type="button"
+                  title="Mostrar/ocultar"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                 >
