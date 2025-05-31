@@ -254,14 +254,6 @@ export function ReviewCredit({
     setIsOpen(false);
   };
 
-  const handleDialogClose = (open: boolean) => {
-    setIsOpen(open);
-    if (!open) {
-      setSelectedStatus('');
-      setRejectionReason('');
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>

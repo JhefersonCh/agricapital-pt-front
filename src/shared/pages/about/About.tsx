@@ -25,8 +25,6 @@ import {
   ArrowRight,
   Leaf,
   BarChart3,
-  Globe,
-  Link,
 } from 'lucide-react';
 import { useAuth } from '@/shared/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -91,35 +89,6 @@ export const About = () => {
       title: 'Liderazgo',
       description:
         'Nos consolidamos como la fintech agrícola líder con $50B+ en créditos otorgados.',
-    },
-  ];
-
-  const team = [
-    {
-      name: 'María González',
-      role: 'CEO & Fundadora',
-      description:
-        '15 años de experiencia en banca agrícola y desarrollo rural.',
-      image: '/placeholder.svg?height=200&width=200',
-    },
-    {
-      name: 'Carlos Rodríguez',
-      role: 'CTO',
-      description: 'Experto en fintech y sistemas de scoring crediticio.',
-      image: '/placeholder.svg?height=200&width=200',
-    },
-    {
-      name: 'Ana Martínez',
-      role: 'Directora de Riesgo',
-      description:
-        'Especialista en evaluación de riesgo agrícola y sostenibilidad.',
-      image: '/placeholder.svg?height=200&width=200',
-    },
-    {
-      name: 'Luis Herrera',
-      role: 'Director Comercial',
-      description: 'Líder en desarrollo de productos financieros para el agro.',
-      image: '/placeholder.svg?height=200&width=200',
     },
   ];
 

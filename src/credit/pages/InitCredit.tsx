@@ -64,6 +64,7 @@ export const InitCredit = () => {
     const step = queryParams.get('step');
     return step ? parseInt(step) : 0;
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoData>({

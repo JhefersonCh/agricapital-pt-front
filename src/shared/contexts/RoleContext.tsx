@@ -22,7 +22,7 @@ interface RoleContextType {
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
-  const { session, user, loading } = useAuth();
+  const { user, loading } = useAuth();
   const [role, setRole] = useState<Role | null>(null);
   const [loadingRole, setLoadingRole] = useState(true);
 
