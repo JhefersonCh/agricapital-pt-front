@@ -9,15 +9,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface RegisterFormProps {
-  isSuccess: boolean;
   setIsSuccess: (success: boolean) => void;
 }
 
-export const RegisterForm = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  isSuccess,
-  setIsSuccess,
-}: RegisterFormProps) => {
+export const RegisterForm = ({ setIsSuccess }: RegisterFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',

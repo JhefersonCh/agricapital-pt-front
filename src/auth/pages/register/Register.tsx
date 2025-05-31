@@ -69,7 +69,7 @@ export default function Register() {
             Ingresa tus datos para registrarte
           </CardDescription>
         </CardHeader>
-        <RegisterForm isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
+        <RegisterForm setIsSuccess={setIsSuccess} />
       </Card>
     </div>
   );
