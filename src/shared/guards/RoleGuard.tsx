@@ -10,7 +10,8 @@ export const RoleGuard = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!loading && !loadingRole) {
+    if (!loading || !loadingRole) {
+      console.log(role);
       if (!user) {
         console.warn(
           'RoleGuard: Usuario no autenticado. Redirigiendo a login.',
