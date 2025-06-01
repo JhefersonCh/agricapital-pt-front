@@ -6,6 +6,7 @@ import { ClientProfileService } from '../services/clientProfileService';
 import { useNavigate } from 'react-router-dom';
 import { RequestService } from '../services/requestService';
 import { ReviewRequest } from '../components/ReviewRequest';
+import { Helmet } from 'react-helmet-async';
 
 const steps = [
   {
@@ -147,6 +148,13 @@ export const RequestByClient = () => {
   };
   return (
     <>
+      <Helmet>
+        <title>Solicitud de Crédito</title>
+        <meta
+          name="description"
+          content="Bienvenido a la página de solicitud de crédito"
+        />
+      </Helmet>
       <div className="mt-4">
         <h1 className="text-2xl font-bold mb-4">Solicitud de Crédito</h1>
         <Stepper steps={steps} currentStep={currentStep} />
