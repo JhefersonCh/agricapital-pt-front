@@ -33,6 +33,9 @@ export class RequestService {
     limit: number,
     sort_order: 'asc' | 'desc',
     order_by: string,
+    client_id?: string,
+    status_id?: string,
+    credit_type_id?: string,
   ) {
     const res = await api.get(`/requests/paginated-list`, {
       params: {
@@ -40,6 +43,9 @@ export class RequestService {
         per_page: limit,
         sort_order,
         order_by,
+        client_id,
+        status_id,
+        credit_type_id,
       },
     });
     return res.data;
