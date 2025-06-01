@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { RequestService } from '../services/requestService';
 import { ReviewRequest } from '../components/ReviewRequest';
 import { Helmet } from 'react-helmet-async';
+import { UserService } from '../services/userService';
 
 const steps = [
   {
@@ -28,6 +29,7 @@ const steps = [
 
 interface PersonalInfoData {
   user_id: string;
+  email?: string;
   date_of_birth: Date | null;
   address_line1: string;
   address_city: string;
@@ -70,6 +72,7 @@ export const InitCredit = () => {
 
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoData>({
     user_id: '',
+    email: '',
     date_of_birth: null,
     address_line1: '',
     address_city: '',
@@ -112,6 +115,9 @@ export const InitCredit = () => {
     if (currentStep === 0) {
       clientProfileService.getClientProfile(userId).then((data) => {
         setPersonalInfo(data.data);
+      });
+      UserService.fetchUserById(userId).then((data) => {
+        setPersonalInfo((prev) => ({ ...prev, email: data.email }));
       });
     }
     if (currentStep === 1) {

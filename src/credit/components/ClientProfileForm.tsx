@@ -25,8 +25,10 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { ClientProfileService } from '../services/clientProfileService';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 interface PersonalInfoData {
+  email?: string;
   user_id: string;
   date_of_birth: Date | null;
   address_line1: string;
@@ -56,6 +58,7 @@ export function ClientProfileForm({
 }: PersonalInfoFormProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
   const handleInputChange = <K extends keyof PersonalInfoData>(
     field: K,
     value: PersonalInfoData[K],
@@ -79,6 +82,7 @@ export function ClientProfileForm({
             ? data.date_of_birth
             : data.date_of_birth.toISOString().split('T')[0],
         user_id: location.pathname.split('/')[3],
+        email: byClient ? user?.email : data.email,
       };
     }
     const clientProfileService = new ClientProfileService();
