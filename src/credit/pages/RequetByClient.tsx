@@ -144,7 +144,7 @@ export const RequestByClient = () => {
 
   const handleSubmit = () => {
     setIsSubmitted(true);
-    navigate(`/clients`);
+    navigate(`/`);
   };
   return (
     <>

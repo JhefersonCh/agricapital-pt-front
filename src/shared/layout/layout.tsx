@@ -10,41 +10,45 @@ import { RoleGuard } from '../guards/RoleGuard';
 import { UserRoutes } from '@/user/UserRoutes';
 import Unauthorized from '../pages/unauthorized/Unauthorized';
 import { CreditRoutes } from '@/credit/CreditRoutes';
+import ScrollToTop from '../components/ScrollToTop';
 
 export const Layout = () => {
   return (
-    <AuthProvider>
-      <RoleProvider>
-        <div className="flex flex-col min-h-screen">
-          <NavBar />
-          <main className="flex-grow p-4 h-full">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/auth/*" element={<AuthRouter />} />
-              <Route
-                path="/user/*"
-                element={<RoleGuard children={<UserRoutes />} />}
-              />
-              <Route
-                path="/credit/*"
-                element={<RoleGuard children={<CreditRoutes />} />}
-              />
-              <Route
-                path="/unauthorized"
-                element={
-                  <Unauthorized
-                    title="Acceso No Autorizado"
-                    message="No tienes permisos para ver este contenido"
-                    showBackButton={true}
-                  />
-                }
-              />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </RoleProvider>
-    </AuthProvider>
+    <>
+      <ScrollToTop />
+      <AuthProvider>
+        <RoleProvider>
+          <div className="flex flex-col min-h-screen">
+            <NavBar />
+            <main className="flex-grow p-4 h-full">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/auth/*" element={<AuthRouter />} />
+                <Route
+                  path="/user/*"
+                  element={<RoleGuard children={<UserRoutes />} />}
+                />
+                <Route
+                  path="/credit/*"
+                  element={<RoleGuard children={<CreditRoutes />} />}
+                />
+                <Route
+                  path="/unauthorized"
+                  element={
+                    <Unauthorized
+                      title="Acceso No Autorizado"
+                      message="No tienes permisos para ver este contenido"
+                      showBackButton={true}
+                    />
+                  }
+                />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </RoleProvider>
+      </AuthProvider>
+    </>
   );
 };

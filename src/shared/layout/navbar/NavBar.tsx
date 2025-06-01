@@ -274,13 +274,6 @@ export default function NavBar() {
               <div className="space-y-1">
                 <DisclosureButton
                   as="button"
-                  onClick={() => navigate('/user/profile')}
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Tu Perfil
-                </DisclosureButton>
-                <DisclosureButton
-                  as="button"
                   onClick={handleSignOut}
                   className="block w-full rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >

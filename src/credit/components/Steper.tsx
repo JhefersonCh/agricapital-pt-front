@@ -2,6 +2,7 @@
 
 import { Check, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
 
 interface Step {
   id: string;
@@ -16,6 +17,11 @@ interface StepperProps {
 }
 
 export function Stepper({ steps, currentStep, className }: StepperProps) {
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }, [currentStep]);
   return (
     <div className={cn('w-full', className)}>
       <ol className="flex items-center w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4">

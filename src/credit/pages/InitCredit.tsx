@@ -144,7 +144,7 @@ export const InitCredit = () => {
 
   const handleSubmit = () => {
     setIsSubmitted(true);
-    navigate(`/clients`);
+    navigate(`/credit/clients`);
   };
   return (
     <>

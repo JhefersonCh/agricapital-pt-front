@@ -217,7 +217,12 @@ export function RequestsList() {
           </Select>
         </div>
         <div className="space-y-2 w-full select-w-full">
-          <Label htmlFor="status_id">Estado de la Solicitud</Label>
+          <Label
+            htmlFor="status_id"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Estado de la Solicitud
+          </Label>
           <Select
             value={filterStatusId}
             onValueChange={(value) => setFilterStatusId(value)}
