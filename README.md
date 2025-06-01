@@ -66,18 +66,20 @@ The system follows a layered architecture, ensuring a clear separation between p
 
 ### Project Structure
 
-src/
-├── auth/            # Authentication components and routing
-│   ├── components/  # Auth-specific components
-│   ├── pages/       # Module pages
-│   └── services/    # Data services (Supabase)
-├── credit/          # Credit management module (applications, reviews, services)
-│   ├── components/  # Credit-specific components
-│   ├── pages/       # Module pages
-│   └── services/    # Data services (FASTAPI)
-├── shared/          # Shared components, layouts, contexts, and utilities
-│   └── layout/      # Main layout and navigation
-└── user/            # User management features (Supabase)
+```markdown
+  src/
+  ├── auth/ # Authentication components and routing
+  │   ├── components/ # Auth-specific components
+  │   ├── pages/ # Module pages
+  │   └── services/ # Data services (Supabase)
+  ├── credit/ # Credit management module (applications, reviews, services)
+  │   ├── components/ # Credit-specific components
+  │   ├── pages/ # Module pages
+  │   └── services/ # Data services (FASTAPI)
+  ├── shared/ # Shared components, layouts, contexts, and utilities
+  │   └── layout/ # Main layout and navigation
+  └── user/ # User management features (Supabase)
+```
 
 ## 👨‍💻 Development Tools
 
