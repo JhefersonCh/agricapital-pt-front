@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useRole } from '../contexts/RoleContext';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -10,12 +10,8 @@ export const RoleGuard = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!loading || !loadingRole) {
-      console.log(role);
+    if (!loading && !loadingRole) {
       if (!user) {
-        console.warn(
-          'RoleGuard: Usuario no autenticado. Redirigiendo a login.',
-        );
         navigate('/auth/login', {
           replace: true,
           state: { from: location.pathname },
@@ -24,43 +20,38 @@ export const RoleGuard = ({ children }: { children: React.ReactNode }) => {
       }
 
       if (!role) {
-        console.warn(
-          'RoleGuard: No se pudo cargar el rol del usuario. Redirigiendo a /unauthorized.',
-        );
         navigate('/unauthorized', { replace: true });
         return;
       }
 
       if (!role.permissions.some((p) => location.pathname.includes(p))) {
-        console.warn(
-          `RoleGuard: El usuario con rol "${role.name}" no tiene permiso para acceder a "${location.pathname}". Redirigiendo a /unauthorized.`,
-        );
         navigate('/unauthorized', { replace: true });
       }
     }
+
+    if (!loading && !user) {
+      navigate('/auth/login', {
+        replace: true,
+        state: { from: location.pathname },
+      });
+    }
   }, [loading, user, role, navigate, location.pathname, loadingRole]);
 
-  if (loading || loadingRole) {
-    return null;
+  if (loading || (user && loadingRole)) {
+    return <div>Cargando...</div>;
   }
 
   if (!user) {
-    return (
-      <Navigate to="/auth/login" replace state={{ from: location.pathname }} />
-    );
+    return null;
   }
 
   if (!role) {
-    console.warn(
-      'RoleGuard: No se pudo cargar el rol del usuario. Redirigiendo a /unauthorized.',
-    );
-    navigate('/unauthorized', { replace: true });
-    return;
+    return null;
   }
 
   if (!role.permissions.some((p) => location.pathname.includes(p))) {
-    return <Navigate to="/unauthorized" replace />;
+    return null;
   }
 
-  return children;
+  return <>{children}</>;
 };

@@ -86,8 +86,9 @@ export function ClientProfileForm({
       };
     }
     const clientProfileService = new ClientProfileService();
-    clientProfileService.createClientProfile(newData).then();
-    onNext();
+    clientProfileService.createClientProfile(newData).then(() => {
+      onNext();
+    });
   };
 
   const isValid =

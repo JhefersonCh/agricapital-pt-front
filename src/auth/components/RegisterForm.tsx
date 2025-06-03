@@ -7,6 +7,7 @@ import { supabase } from '@/supabaseClient';
 import { Eye, EyeOff, Lock, Mail, Phone, User } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface RegisterFormProps {
   setIsSuccess: (success: boolean) => void;
@@ -99,12 +100,21 @@ export const RegisterForm = ({ setIsSuccess }: RegisterFormProps) => {
         },
       });
 
-      await supabase.from('users').insert({
-        id: user?.user?.id,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-      });
+      await supabase
+        .from('users')
+        .insert({
+          id: user?.user?.id,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        })
+        .then(() => {
+          toast.success('Registro exitoso', {
+            description: 'Tu cuenta ha sido creada correctamente',
+            icon: '✅',
+            position: 'top-right',
+          });
+        });
     } catch (error) {
       console.error('Error al registrar:', error);
     } finally {

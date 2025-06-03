@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export const LoginForm = () => {
   const router = useNavigate();
@@ -60,10 +61,17 @@ export const LoginForm = () => {
     setLoginError('');
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
+      const { data, error } = await supabase.auth
+        .signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        })
+        .then(() => {
+          toast.success('Bienvenido de nuevo', {
+            icon: '✅',
+            position: 'top-right',
+          });
+        });
 
       if (error) {
         throw error;
