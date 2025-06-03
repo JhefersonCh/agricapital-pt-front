@@ -61,24 +61,28 @@ export const LoginForm = () => {
     setLoginError('');
 
     try {
-      const { data, error } = await supabase.auth
-        .signInWithPassword({
-          email: formData.email,
-          password: formData.password,
-        })
-        .then(() => {
-          toast.success('Bienvenido de nuevo', {
-            icon: '✅',
-            position: 'top-right',
-          });
-        });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (error) {
         throw error;
       }
 
       if (data.session) {
+        toast.success('Bienvenido de nuevo', {
+          icon: '✅',
+          position: 'top-right',
+        });
         router('');
+      } else {
+        console.warn(
+          'Login completado pero no se recibió sesión. Posiblemente un caso especial.',
+        );
+        toast.warning('Inicio de sesión incompleto', {
+          description: 'Hubo un problema al establecer la sesión.',
+        });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

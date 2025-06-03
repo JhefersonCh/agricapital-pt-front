@@ -100,21 +100,18 @@ export const RegisterForm = ({ setIsSuccess }: RegisterFormProps) => {
         },
       });
 
-      await supabase
-        .from('users')
-        .insert({
-          id: user?.user?.id,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-        })
-        .then(() => {
-          toast.success('Registro exitoso', {
-            description: 'Tu cuenta ha sido creada correctamente',
-            icon: '✅',
-            position: 'top-right',
-          });
-        });
+      await supabase.from('users').insert({
+        id: user?.user?.id,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+      });
+
+      toast.success('Registro exitoso', {
+        description: 'Tu cuenta ha sido creada correctamente',
+        icon: '✅',
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Error al registrar:', error);
     } finally {
